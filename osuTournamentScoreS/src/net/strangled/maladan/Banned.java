@@ -1,10 +1,10 @@
 package net.strangled.maladan;
 
-public class Banned {
+class Banned {
     private String song1;
     private String song2;
 
-    public Banned(String song1, String song2) {
+    Banned(String song1, String song2) {
         if (song1 != null) {
             this.song1 = song1;
         }
@@ -13,12 +13,12 @@ public class Banned {
         }
     }
 
-    public String getSong1() {
-        return new String(this.song1);
+    String getSong1() {
+        return this.song1;
     }
 
-    public String getSong2() {
-        return new String(this.song2);
+    String getSong2() {
+        return this.song2;
     }
 }
 
