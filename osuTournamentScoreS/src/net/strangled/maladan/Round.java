@@ -1,14 +1,10 @@
 package net.strangled.maladan;
 
-public class Round {
-    private int roundNumber;
+class Round {
     private String songName;
     private String winner;
 
-    public Round(int roundNumber, String songName, String winner) {
-        if (roundNumber > 0) {
-            this.roundNumber = roundNumber;
-        }
+    Round(String songName, String winner) {
         if (songName != null) {
             this.songName = songName;
         }
@@ -17,16 +13,12 @@ public class Round {
         }
     }
 
-    public String getSongName() {
-        return new String(this.songName);
+    String getSongName() {
+        return this.songName;
     }
 
-    public String getRoundWinner() {
-        return new String(this.winner);
-    }
-
-    public int getRoundNumber() {
-        return this.roundNumber;
+    String getRoundWinner() {
+        return this.winner;
     }
 }
 
