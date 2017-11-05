@@ -157,8 +157,8 @@ public class Main {
         int redScore = finalScore.getRedScore();
         int blueScore = finalScore.getBlueScore();
 
-        try {
-            PrintWriter writer = new PrintWriter("Scores" + File.separator + df.format(theDate) + " Red- " + redScore + " Blue- " + blueScore + ".txt", "UTF-8");
+        try (PrintWriter writer = new PrintWriter("Scores" + File.separator + df.format(theDate) + " Red- " + redScore + " Blue- " + blueScore + ".txt", "UTF-8")) {
+
             writer.println("Teams:");
 
             writer.println("Red Team Score: " + redScore);
