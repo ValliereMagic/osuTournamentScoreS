@@ -1,9 +1,7 @@
 package net.strangled.maladan;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +23,7 @@ public class Main {
             List<Round> rounds = new ArrayList<>();
             boolean matchComplete = false;
 
-            while(!matchComplete) {
+            while (!matchComplete) {
                 Round thisRound = executeRound(input);
                 rounds.add(thisRound);
 
@@ -51,7 +49,7 @@ public class Main {
             System.out.print("The Round has been Completed. Play another round?(y/n): ");
             String userResponse = input.nextLine().toLowerCase().trim();
 
-            if (userResponse.equals("n")) {
+            if (!userResponse.equals("y")) {
                 break;
             }
         }
@@ -86,16 +84,18 @@ public class Main {
 
         while (true) {
             System.out.print("Enter the winning team name: ");
-            String winner = input.nextLine();
+            String winner = input.nextLine().toLowerCase();
 
-            if (winner.toLowerCase().equals("red")) {
-                return new Round(mapName, "red");
+            switch (winner) {
+                case "red":
+                    return new Round(mapName, "red");
 
-            } else if (winner.toLowerCase().equals("blue")) {
-                return new Round(mapName, "blue");
+                case "blue":
+                    return new Round(mapName, "blue");
 
-            } else {
-                System.out.println("Invalid data, please try again.");
+                default:
+                    System.out.println("Invalid data, please try again.");
+                    break;
             }
         }
     }
@@ -105,25 +105,24 @@ public class Main {
             System.out.print("Enter the name of the map to be played: ");
             String mapName = input.nextLine().toLowerCase();
 
-            if (!mapName.trim().equals("")) {
+            if (!mapName.trim().isEmpty()) {
                 return mapName;
             }
+            System.out.println("You can't play an empty map!");
         }
     }
 
     private static RollOrder getRollOrder(Scanner input) {
         while (true) {
             System.out.print("Enter the name of the team that won the roll: ");
-            String firstTeam = input.nextLine().toLowerCase();
-            String secondTeam;
+
+            String firstTeam = input.nextLine().toLowerCase().trim();
 
             if (firstTeam.equals("red")) {
-                secondTeam = "blue";
-                return new RollOrder(firstTeam, secondTeam);
+                return new RollOrder(firstTeam, "blue");
 
             } else if (firstTeam.equals("blue")) {
-                secondTeam = "red";
-                return new RollOrder(firstTeam, secondTeam);
+                return new RollOrder(firstTeam, "red");
             }
             System.out.println("Invalid team entered.");
         }
@@ -153,11 +152,13 @@ public class Main {
 
     private static void writeFile(Banned bannedMaps, Score finalScore, List<Round> rounds, TeamMembers members) {
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yy HH-mm-ss");
+
         Date theDate = new Date();
         int redScore = finalScore.getRedScore();
         int blueScore = finalScore.getBlueScore();
 
-        try (PrintWriter writer = new PrintWriter("Scores" + File.separator + df.format(theDate) + " Red- " + redScore + " Blue- " + blueScore + ".txt", "UTF-8")) {
+        try (PrintWriter writer = new PrintWriter("Scores" + File.separator +
+                df.format(theDate) + " Red- " + redScore + " Blue- " + blueScore + ".txt", StandardCharsets.UTF_8)) {
 
             writer.println("Teams:");
 
@@ -176,13 +177,15 @@ public class Main {
             writer.println("Banned Maps:");
             writer.println("     " + bannedMaps.getSong1());
             writer.println("     " + bannedMaps.getSong2());
-            writer.close();
 
         } catch (FileNotFoundException e) {
-            System.out.println("File not Found.");
+            System.err.println("File not Found.");
 
         } catch (UnsupportedEncodingException e) {
-            System.out.println("Unsupported Encoding.");
+            System.err.println("Unsupported Encoding.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
